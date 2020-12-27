@@ -1,0 +1,11 @@
+--- a/Makefile	2018-11-23 09:05:48.000000000 -0800
++++ b/Makefile	2020-12-27 04:45:16.801851730 -0800
+@@ -172,7 +172,7 @@
+ ifneq ($(MAKECMDGOALS),uninstall)
+ ifneq ($(MAKECMDGOALS),user_uninstall)
+ ifneq ($(MAKECMDGOALS),help)
+-include $(INCLUDEFILES)
++-include $(INCLUDEFILES)
+ endif
+ endif
+ endif

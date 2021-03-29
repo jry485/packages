@@ -1,0 +1,15 @@
+--- a/nlbwmon.c	2021-03-29 21:42:13.763012327 +0900
++++ b/nlbwmon.c	2021-03-29 21:43:53.000000000 +0900
+@@ -135,8 +135,10 @@
+ 
+ 	/* database successfully wrapped around and triggered a ct dump */
+ 	if (err == -ESTALE)
+-		return;
+-
++	{
++	       database_cleanup();
++	       return;
++	}
+ 	/* fatal error during database archiving */
+ 	if (err != 0) {
+ 		fprintf(stderr, "Unable to archive database: %s\n",

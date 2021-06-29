@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=wg-installer
 PKG_RELEASE:=$(AUTORELEASE)
-
+PKG_VERSION:=0.1.0
 PKG_MAINTAINER:=Nick Hainke <vincent@systemli.org>
 
 include $(INCLUDE_DIR)/package.mk

@@ -22,6 +22,7 @@ PKG_CPE_ID:=cpe:/a:qemu:qemu
 PKG_BUILD_PARALLEL:=1
 PKG_INSTALL:=1
 PKG_USE_MIPS16:=0
+PKG_FLAGS:=nonshared
 
 PKG_BUILD_DEPENDS+=spice-protocol
 
@@ -63,6 +64,8 @@ define Package/qemu-ga/install
 	$(INSTALL_BIN) ./files/qemu-ga.init $(1)/etc/init.d/qemu-ga
 	$(INSTALL_DIR) $(1)/etc/hotplug.d/virtio-ports
 	$(INSTALL_BIN) ./files/10-qemu-ga.hotplug $(1)/etc/hotplug.d/virtio-ports/10-qemu-ga
+	$(INSTALL_DIR) $(1)/sbin
+	$(INSTALL_BIN) ./files/shutdown $(1)/sbin/shutdown
 endef
 
 PKG_CONFIG_DEPENDS += CONFIG_PACKAGE_qemu-ga

@@ -1,12 +1,37 @@
 --- nfnetlink.c	2021-09-26 12:55:24.466030937 +0900
-+++ nfnetlink.c	2021-09-26 12:56:25.000000000 +0900
-@@ -377,17 +377,15 @@
++++ nfnetlink.c	2021-09-26 16:31:58.000000000 +0900
+@@ -344,7 +344,7 @@
+ 	return NL_OK;
+ }
+ 
+-static void
++static int
+ check_rmem_max(int bufsize)
+ {
+ 	char buf[16];
+@@ -361,11 +361,14 @@
+ 	}
+ 
+ 	if (bufsize > max)
+-		fprintf(stderr,
++	{	fprintf(stderr,
+ 		        "The netlink receive buffer size of %d bytes will be capped to %d bytes\n"
+ 		        "by the kernel. The net.core.rmem_max sysctl limit needs to be raised to\n"
+ 		        "at least %d in order to sucessfully set the desired receive buffer size!\n",
+ 		        bufsize, max, bufsize);
++	}
++
++	return max;
+ }
+ 
+ 
+@@ -377,17 +380,15 @@
  	if (!nl)
  		return -ENOMEM;
  
 -	if (nl_connect(nl, NETLINK_NETFILTER))
 -		return -errno;
-+	check_rmem_max(bufsize);
++	bufsize=check_rmem_max(bufsize);
 +
 +	if (nl_connect_ex(nl, NETLINK_NETFILTER,bufsize,0))
 + 		return -errno;
@@ -21,4 +46,4 @@
 -		return -errno;
  
  	ufd.cb = handle_event;
- 	ufd.fd = nl_socket_get_fd(nl); 
+ 	ufd.fd = nl_socket_get_fd(nl);

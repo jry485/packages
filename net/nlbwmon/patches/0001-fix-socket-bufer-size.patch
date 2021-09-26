@@ -1,20 +1,24 @@
---- a/nfnetlink.c	2021-02-23 18:05:22.010667169 +0800
-+++ b/nfnetlink.c	2021-02-23 18:06:01.000000000 +0800
-@@ -353,16 +353,13 @@
+--- nfnetlink.c	2021-09-26 12:55:24.466030937 +0900
++++ nfnetlink.c	2021-09-26 12:56:25.000000000 +0900
+@@ -377,17 +377,15 @@
  	if (!nl)
  		return -ENOMEM;
  
 -	if (nl_connect(nl, NETLINK_NETFILTER))
+-		return -errno;
++	check_rmem_max(bufsize);
++
 +	if (nl_connect_ex(nl, NETLINK_NETFILTER,bufsize,0))
- 		return -errno;
++ 		return -errno;
  
  	if (nl_socket_add_memberships(nl, NFNLGRP_CONNTRACK_NEW,
  	                                  NFNLGRP_CONNTRACK_DESTROY, 0))
  		return -errno;
  
+-	check_rmem_max(bufsize);
+-
 -	if (nl_socket_set_buffer_size(nl, bufsize, 0))
 -		return -errno;
--
- 	ufd.cb = handle_event;
- 	ufd.fd = nl_socket_get_fd(nl);
  
+ 	ufd.cb = handle_event;
+ 	ufd.fd = nl_socket_get_fd(nl); 

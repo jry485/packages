@@ -172,6 +172,7 @@ CONFIGURE_ARGS += \
 	--without-bsd-auth \
 	--without-kerberos5 \
 	--with-stackprotect \
+	--with-sandbox=rlimit \
 	--with$(if $(CONFIG_OPENSSL_ENGINE),,out)-ssl-engine \
 	--with$(if $(CONFIG_OPENSSH_LIBFIDO2),,out)-security-key-builtin
 	

@@ -21,7 +21,7 @@ hk_generate_as_needed() {
 	done
 }
 
-sshd_instance()
+ssh_instance()
 {
 	[ "$2" = 0 ] || {
 		echo "validation failed"
@@ -58,9 +58,9 @@ sshd_instance()
 	procd_close_instance
 }
 
-validate_section_sshd()
+validate_section_ssh()
 {
-	uci_load_validate sshd sshd "$1" "$2" \
+	uci_load_validate ssh ssh "$1" "$2" \
 		'PasswordAuth:bool:1' \
 		'enable:bool:1' \
 		'RootPasswordAuth:bool:1' \
@@ -71,13 +71,13 @@ validate_section_sshd()
 start_service()
 {
       	hk_generate_as_needed
-	config_load sshd
-    	config_foreach validate_section_sshd sshd sshd_instance
+	config_load ssh
+    	config_foreach validate_section_ssh ssh ssh_instance
 }
 
 service_triggers()
 {
-	procd_add_config_trigger "config.change" "sshd" /etc/init.d/sshd reload
+	procd_add_config_trigger "config.change" "ssh" /etc/init.d/sshd reload
 }
 
 shutdown() {

@@ -105,6 +105,7 @@ define Package/openssh-server/conffiles
 /etc/ssh/ssh_host_ed25519_key.pub
 /etc/ssh/ssh_host_rsa_key
 /etc/ssh/ssh_host_rsa_key.pub
+/etc/config/ssh
 endef
 
 define Package/openssh-server-pam
@@ -230,6 +231,9 @@ define Package/openssh-server/install
 	$(INSTALL_BIN) ./files/sshd.failsafe $(1)/lib/preinit/99_10_failsafe_sshd
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/sshd $(1)/usr/sbin/
+	$(INSTALL_DIR) $(1)/etc/config
+	$(INSTALL_CONF) ./files/ssh.config $(1)/etc/config/ssh
+
 endef
 
 define Package/openssh-server-pam/install

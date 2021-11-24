@@ -51,6 +51,16 @@ ssh_instance()
 		sed -i '$aPasswordAuthentication yes' /etc/ssh/sshd_config
 	fi
 
+	sed -i '/PubkeyAuthentication/d' /etc/ssh/sshd_config
+	sed -i '$aPubkeyAuthentication yes' /etc/ssh/sshd_config
+
+	sed -i '/AuthorizedKeysFile/d' /etc/ssh/sshd_config
+	sed -i '$aAuthorizedKeysFile /etc/ssh/authorized_pub' /etc/ssh/sshd_config
+
+	sed -i '/PubkeyAcceptedAlgorithms/d' /etc/ssh/sshd_config
+	sed -i '$aPubkeyAcceptedAlgorithms +ssh-rsa' /etc/ssh/sshd_config
+
+
 	mkdir -m 0700 -p /var/empty
 	procd_open_instance
 	#procd_add_mdns "ssh" "tcp" "$lport"

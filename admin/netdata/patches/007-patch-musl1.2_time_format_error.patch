@@ -1,0 +1,52 @@
+--- a/libnetdata/log/log.c	2021-11-30 01:07:43.560818233 -0800
++++ b/libnetdata/log/log.c	2021-11-30 01:11:21.000000000 -0800
+@@ -607,12 +607,12 @@
+         if(prevented) {
+             char date[LOG_DATE_LENGTH];
+             log_date(date, LOG_DATE_LENGTH);
+-            fprintf(stderr, "%s: %s LOG FLOOD PROTECTION reset for process '%s' (prevented %lu logs in the last %ld seconds).\n"
++            fprintf(stderr, "%s: %s LOG FLOOD PROTECTION reset for process '%s' (prevented %lu logs in the last %lld seconds).\n"
+                     , date
+                     , program_name
+                     , program_name
+                     , prevented
+-                    , now - start
++                    , (long long)(now - start)
+             );
+         }
+ 
+@@ -628,12 +628,12 @@
+         if(prevented) {
+             char date[LOG_DATE_LENGTH];
+             log_date(date, LOG_DATE_LENGTH);
+-            fprintf(stderr, "%s: %s LOG FLOOD PROTECTION resuming logging from process '%s' (prevented %lu logs in the last %ld seconds).\n"
++            fprintf(stderr, "%s: %s LOG FLOOD PROTECTION resuming logging from process '%s' (prevented %lu logs in the last %lld seconds).\n"
+                     , date
+                     , program_name
+                     , program_name
+                     , prevented
+-                    , error_log_throttle_period
++                    , (long long)error_log_throttle_period
+             );
+         }
+ 
+@@ -650,15 +650,15 @@
+         if(!prevented) {
+             char date[LOG_DATE_LENGTH];
+             log_date(date, LOG_DATE_LENGTH);
+-            fprintf(stderr, "%s: %s LOG FLOOD PROTECTION too many logs (%lu logs in %ld seconds, threshold is set to %lu logs in %ld seconds). Preventing more logs from process '%s' for %ld seconds.\n"
++            fprintf(stderr, "%s: %s LOG FLOOD PROTECTION too many logs (%lu logs in %lld seconds, threshold is set to %lu logs in %lld seconds). Preventing more logs from process '%s' for %lld seconds.\n"
+                     , date
+                     , program_name
+                     , counter
+-                    , now - start
++                    , (long long)(now - start)
+                     , error_log_errors_per_period
+-                    , error_log_throttle_period
++                    , (long long)error_log_throttle_period
+                     , program_name
+-                    , start + error_log_throttle_period - now);
++                    , (long long)(start + error_log_throttle_period - now));
+         }
+ 
+         prevented++;

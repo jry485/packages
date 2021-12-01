@@ -1,0 +1,20 @@
+--- a/src/outputs/cast.c	2021-11-30 22:23:58.614641790 -0800
++++ b/src/outputs/cast.c	2021-11-30 22:24:41.000000000 -0800
+@@ -2034,7 +2034,7 @@
+   cs->offset_ts.tv_sec  = (offset_ms / 1000);
+   cs->offset_ts.tv_nsec = (offset_ms % 1000) * 1000000UL;
+ 
+-  DPRINTF(E_DBG, L_CAST, "Offset is set to %lu:%lu\n", cs->offset_ts.tv_sec, cs->offset_ts.tv_nsec);
++  DPRINTF(E_DBG, L_CAST, "Offset is set to %llu:%lu\n", cs->offset_ts.tv_sec, cs->offset_ts.tv_nsec);
+ 
+   cs->ev = event_new(evbase_player, cs->server_fd, EV_READ | EV_PERSIST, cast_listen_cb, cs);
+   if (!cs->ev)
+@@ -2335,7 +2335,7 @@
+ 	  cs->state = CAST_STATE_BUFFERING;
+ 
+ 	  clock_gettime(CLOCK_MONOTONIC, &ts);
+-	  DPRINTF(E_DBG, L_CAST, "Start time is %lu:%lu, current time is %lu:%lu\n", cs->start_pts.tv_sec, cs->start_pts.tv_nsec, ts.tv_sec, ts.tv_nsec);
++	  DPRINTF(E_DBG, L_CAST, "Start time is %llu:%lu, current time is %llu:%ld\n", cs->start_pts.tv_sec, cs->start_pts.tv_nsec, ts.tv_sec, ts.tv_nsec);
+ 	}
+ 
+       if (cs->state == CAST_STATE_BUFFERING)

@@ -1,0 +1,16 @@
+--- a/src/RSP2SQL.c	2021-11-30 22:30:18.217402253 -0800
++++ b/src/RSP2SQL.c	2021-11-30 22:31:03.000000000 -0800
+@@ -2143,11 +2143,11 @@
+                 				goto datecrit_valid_0; /* ABORT */
+                 			}
+ 
+-                			ret = snprintf(buf, sizeof(buf), "%ld", d.date
++                			ret = snprintf(buf, sizeof(buf), "%lld", d.date
+                 );
+                 			if ((ret < 0) || (ret >= sizeof(buf)))
+                 			{
+-                				DPRINTF(E_LOG, L_RSP, "Date %ld too large for buffer, oops!\n", d.date
++                				DPRINTF(E_LOG, L_RSP, "Date %lld too large for buffer, oops!\n", d.date
+                 );
+                 				retval.valid= 0;
+

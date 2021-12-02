@@ -1,0 +1,109 @@
+From c48d902f74404d52f65f934e0333f5cea2530baa Mon Sep 17 00:00:00 2001
+From: W_Y_CPP <383152993@qq.com>
+Date: Wed, 1 Dec 2021 18:38:01 -0800
+Subject: [PATCH] fix musl 1.2.x build
+
+---
+ src/RSP2SQL.c         | 4 ++--
+ src/library.c         | 2 +-
+ src/outputs/airplay.c | 2 +-
+ src/outputs/alsa.c    | 2 +-
+ src/outputs/cast.c    | 4 ++--
+ src/outputs/raop.c    | 2 +-
+ 6 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/src/RSP2SQL.c b/src/RSP2SQL.c
+index 8af0f4b..89a4cdf 100644
+--- a/src/RSP2SQL.c
++++ b/src/RSP2SQL.c
+@@ -2143,11 +2143,11 @@ datecrit(pRSP2SQL ctx)
+                 				goto datecrit_valid_0; /* ABORT */
+                 			}
+ 
+-                			ret = snprintf(buf, sizeof(buf), "%ld", d.date
++                			ret = snprintf(buf, sizeof(buf), "%lld", d.date
+                 );
+                 			if ((ret < 0) || (ret >= sizeof(buf)))
+                 			{
+-                				DPRINTF(E_LOG, L_RSP, "Date %ld too large for buffer, oops!\n", d.date
++                				DPRINTF(E_LOG, L_RSP, "Date %lld too large for buffer, oops!\n", d.date
+                 );
+                 				retval.valid= 0;
+ 
+diff --git a/src/library.c b/src/library.c
+index 20c1c21..33e5904 100644
+--- a/src/library.c
++++ b/src/library.c
+@@ -233,7 +233,7 @@ library_callback_schedule(library_cb cb, void *arg, struct timeval *wait, enum l
+ 
+   event_add(cbreg->ev, wait);
+ 
+-  DPRINTF(E_DBG, L_LIB, "Added library callback to %p (id %d), wait %ld.%06ld\n", cbreg->cb, idx_available, wait->tv_sec, wait->tv_usec);
++  DPRINTF(E_DBG, L_LIB, "Added library callback to %p (id %d), wait %lld.%06lld\n", cbreg->cb, idx_available, wait->tv_sec, wait->tv_usec);
+ 
+   return idx_available;
+ }
+diff --git a/src/outputs/airplay.c b/src/outputs/airplay.c
+index 0973592..ab099ef 100644
+--- a/src/outputs/airplay.c
++++ b/src/outputs/airplay.c
+@@ -2074,7 +2074,7 @@ packets_sync_send(struct airplay_master_session *rms)
+ 	  sync_pkt = rtp_sync_packet_next(rms->rtp_session, rms->cur_stamp, 0x90);
+ 	  control_packet_send(rs, sync_pkt);
+ 
+-	  DPRINTF(E_DBG, L_AIRPLAY, "Start sync packet sent to '%s': cur_pos=%" PRIu32 ", cur_ts=%ld.%09ld, clock=%ld.%09ld, rtptime=%" PRIu32 "\n",
++	  DPRINTF(E_DBG, L_AIRPLAY, "Start sync packet sent to '%s': cur_pos=%lu, cur_ts=%lld.%09ld, clock=%lld.%09ld, rtptime=%lu\n",
+ 	    rs->devname, rms->cur_stamp.pos, rms->cur_stamp.ts.tv_sec, rms->cur_stamp.ts.tv_nsec, ts.tv_sec, ts.tv_nsec, rms->rtp_session->pos);
+ 	}
+       else if (is_sync_time && rs->state == AIRPLAY_STATE_STREAMING)
+diff --git a/src/outputs/alsa.c b/src/outputs/alsa.c
+index cdc5d2d..6277561 100644
+--- a/src/outputs/alsa.c
++++ b/src/outputs/alsa.c
+@@ -900,7 +900,7 @@ sync_check(double *drift, double *latency, struct alsa_playback_session *pb, snd
+   exp_pos = (uint64_t)elapsed * pb->quality.sample_rate / 1000;
+   diff = cur_pos - exp_pos;
+ 
+-  DPRINTF(E_SPAM, L_LAUDIO, "counter %d/%d, stamp %lu:%lu, now %lu:%lu, elapsed is %d ms, cur_pos=%" PRIu64 ", exp_pos=%" PRIu64 ", diff=%d\n",
++  DPRINTF(E_SPAM, L_LAUDIO, "counter %d/%d, stamp %llu:%lu, now %llu:%lu, elapsed is %d ms, cur_pos=%" PRIu64 ", exp_pos=%" PRIu64 ", diff=%d\n",
+     pb->latency_counter, alsa_latency_history_size, pb->stamp_pts.tv_sec, pb->stamp_pts.tv_nsec / 1000000, ts.tv_sec, ts.tv_nsec / 1000000, elapsed, cur_pos, exp_pos, diff);
+ 
+   // Add the latency to our measurement history
+diff --git a/src/outputs/cast.c b/src/outputs/cast.c
+index f8d5ec3..e735d92 100644
+--- a/src/outputs/cast.c
++++ b/src/outputs/cast.c
+@@ -2034,7 +2034,7 @@ cast_session_make(struct output_device *device, int family, int callback_id)
+   cs->offset_ts.tv_sec  = (offset_ms / 1000);
+   cs->offset_ts.tv_nsec = (offset_ms % 1000) * 1000000UL;
+ 
+-  DPRINTF(E_DBG, L_CAST, "Offset is set to %lu:%lu\n", cs->offset_ts.tv_sec, cs->offset_ts.tv_nsec);
++  DPRINTF(E_DBG, L_CAST, "Offset is set to %llu:%lu\n", cs->offset_ts.tv_sec, cs->offset_ts.tv_nsec);
+ 
+   cs->ev = event_new(evbase_player, cs->server_fd, EV_READ | EV_PERSIST, cast_listen_cb, cs);
+   if (!cs->ev)
+@@ -2335,7 +2335,7 @@ cast_write(struct output_buffer *obuf)
+ 	  cs->state = CAST_STATE_BUFFERING;
+ 
+ 	  clock_gettime(CLOCK_MONOTONIC, &ts);
+-	  DPRINTF(E_DBG, L_CAST, "Start time is %lu:%lu, current time is %lu:%lu\n", cs->start_pts.tv_sec, cs->start_pts.tv_nsec, ts.tv_sec, ts.tv_nsec);
++	  DPRINTF(E_DBG, L_CAST, "Start time is %llu:%lu, current time is %llu:%ld\n", cs->start_pts.tv_sec, cs->start_pts.tv_nsec, ts.tv_sec, ts.tv_nsec);
+ 	}
+ 
+       if (cs->state == CAST_STATE_BUFFERING)
+diff --git a/src/outputs/raop.c b/src/outputs/raop.c
+index 696f9e7..58050ac 100644
+--- a/src/outputs/raop.c
++++ b/src/outputs/raop.c
+@@ -2909,7 +2909,7 @@ packets_sync_send(struct raop_master_session *rms)
+ 	  sync_pkt = rtp_sync_packet_next(rms->rtp_session, rms->cur_stamp, 0x90);
+ 	  control_packet_send(rs, sync_pkt);
+ 
+-	  DPRINTF(E_DBG, L_RAOP, "Start sync packet sent to '%s': cur_pos=%" PRIu32 ", cur_ts=%ld.%09ld, clock=%ld.%09ld, rtptime=%" PRIu32 "\n",
++	  DPRINTF(E_DBG, L_RAOP, "Start sync packet sent to '%s': cur_pos=%lu, cur_ts=%lld.%09ld, clock=%lld.%09ld, rtptime=%lu\n",
+ 	    rs->devname, rms->cur_stamp.pos, rms->cur_stamp.ts.tv_sec, rms->cur_stamp.ts.tv_nsec, ts.tv_sec, ts.tv_nsec, rms->rtp_session->pos);
+ 	}
+       else if (is_sync_time && rs->state == RAOP_STATE_STREAMING)
+-- 
+2.17.1
+

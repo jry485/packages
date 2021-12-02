@@ -1,0 +1,25 @@
+From ddd5c0775c60a7a5edbf8eb867b14d559ad76615 Mon Sep 17 00:00:00 2001
+From: W_Y_CPP <383152993@qq.com>
+Date: Thu, 2 Dec 2021 02:09:51 -0800
+Subject: [PATCH] fix time_t format error
+
+---
+ src/logging.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/logging.c b/src/logging.c
+index 931f32b..af6ca43 100644
+--- a/src/logging.c
++++ b/src/logging.c
+@@ -76,7 +76,7 @@ void _log(const char *file, int line, int severity, const char *fmt, ...) {
+ 
+   struct timeval tv;
+   gettimeofday(&tv, NULL);
+-  fprintf(logf, "%s %8ld.%06ld %s:%d ", SeverityStr[severity], tv.tv_sec,
++  fprintf(logf, "%s %8lld.%06lld %s:%d ", SeverityStr[severity], tv.tv_sec,
+           tv.tv_usec, file, line);
+ 
+   va_list args;
+-- 
+2.17.1
+

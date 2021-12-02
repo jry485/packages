@@ -1,0 +1,29 @@
+From ed6674f2ce4ef292350edb3de9af04f7a593252e Mon Sep 17 00:00:00 2001
+From: W_Y_CPP <383152993@qq.com>
+Date: Wed, 1 Dec 2021 20:53:50 -0800
+Subject: [PATCH] fix musl 1.2.x
+
+---
+ src/pcm/pcm.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/pcm/pcm.c b/src/pcm/pcm.c
+index 24030b3..83a74a0 100644
+--- a/src/pcm/pcm.c
++++ b/src/pcm/pcm.c
+@@ -2347,10 +2347,10 @@ int snd_pcm_status_dump(snd_pcm_status_t *status, snd_output_t *out)
+ {
+ 	assert(status);
+ 	snd_output_printf(out, "  state       : %s\n", snd_pcm_state_name((snd_pcm_state_t) status->state));
+-	snd_output_printf(out, "  trigger_time: %ld.%06ld\n",
++	snd_output_printf(out, "  trigger_time: %lld.%06ld\n",
+ 			  status->trigger_tstamp.tv_sec,
+ 			  status->trigger_tstamp.tv_nsec / 1000);
+-	snd_output_printf(out, "  tstamp      : %ld.%06ld\n",
++	snd_output_printf(out, "  tstamp      : %lld.%06ld\n",
+ 		status->tstamp.tv_sec, status->tstamp.tv_nsec / 1000);
+ 	snd_output_printf(out, "  delay       : %ld\n", (long)status->delay);
+ 	snd_output_printf(out, "  avail       : %ld\n", (long)status->avail);
+-- 
+2.17.1
+

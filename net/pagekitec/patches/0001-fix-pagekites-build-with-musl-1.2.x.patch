@@ -1,0 +1,25 @@
+From 813c78f1c97b2449c9d335d9bf1e221055fc24ca Mon Sep 17 00:00:00 2001
+From: W_Y_CPP <383152993@qq.com>
+Date: Thu, 2 Dec 2021 02:24:19 -0800
+Subject: [PATCH] fix pagekites build with musl 1.2.x
+
+---
+ libpagekite/pkproto.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/libpagekite/pkproto.c b/libpagekite/pkproto.c
+index fda41d2..a124893 100644
+--- a/libpagekite/pkproto.c
++++ b/libpagekite/pkproto.c
+@@ -606,7 +606,7 @@ char* pk_sign(const char* token, const char* secret, time_t ts,
+ 
+   /* Optionally embed a timestamp to the resolution of 10 minutes */
+   if (ts > 0) {
+-    sprintf(tsbuf, "%lx", ts / 600);
++    sprintf(tsbuf, "%llx", ts / 600);
+     buffer[0] = 't';
+   }
+   else tsbuf[0] = '\0';
+-- 
+2.17.1
+

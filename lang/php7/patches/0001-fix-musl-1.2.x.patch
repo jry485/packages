@@ -1,0 +1,42 @@
+From 688981f8b0dfc5cf7b2dd089523fc5da2ef82742 Mon Sep 17 00:00:00 2001
+From: W_Y_CPP <383152993@qq.com>
+Date: Thu, 2 Dec 2021 20:51:23 -0800
+Subject: [PATCH] fix musl 1.2.x
+
+---
+ sapi/fpm/fpm/fpm_children.c | 4 ++--
+ sapi/fpm/fpm/fpm_log.c      | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/sapi/fpm/fpm/fpm_children.c b/sapi/fpm/fpm/fpm_children.c
+index fd121372..f620b78d 100644
+--- a/sapi/fpm/fpm/fpm_children.c
++++ b/sapi/fpm/fpm/fpm_children.c
+@@ -256,9 +256,9 @@ void fpm_children_bury() /* {{{ */
+ 				if (!fpm_pctl_can_spawn_children()) {
+ 					severity = ZLOG_DEBUG;
+ 				}
+-				zlog(severity, "[pool %s] child %d exited %s after %ld.%06d seconds from start", child->wp->config->name, (int) pid, buf, tv2.tv_sec, (int) tv2.tv_usec);
++				zlog(severity, "[pool %s] child %d exited %s after %lld.%06d seconds from start", child->wp->config->name, (int) pid, buf, tv2.tv_sec, (int) tv2.tv_usec);
+ 			} else {
+-				zlog(ZLOG_DEBUG, "[pool %s] child %d has been killed by the process management after %ld.%06d seconds from start", child->wp->config->name, (int) pid, tv2.tv_sec, (int) tv2.tv_usec);
++				zlog(ZLOG_DEBUG, "[pool %s] child %d has been killed by the process management after %lld.%06d seconds from start", child->wp->config->name, (int) pid, tv2.tv_sec, (int) tv2.tv_usec);
+ 			}
+ 
+ 			fpm_child_close(child, 1 /* in event_loop */);
+diff --git a/sapi/fpm/fpm/fpm_log.c b/sapi/fpm/fpm/fpm_log.c
+index a09e80a4..3e76a2d9 100644
+--- a/sapi/fpm/fpm/fpm_log.c
++++ b/sapi/fpm/fpm/fpm_log.c
+@@ -214,7 +214,7 @@ int fpm_log_write(char *log_format) /* {{{ */
+ 					/* microseconds */
+ 					} else if (!strcasecmp(format, "microseconds") || !strcasecmp(format, "micro")) {
+ 						if (!test) {
+-							len2 = snprintf(b, FPM_LOG_BUFFER - len, "%lu", proc.duration.tv_sec * 1000000UL + proc.duration.tv_usec);
++							len2 = snprintf(b, FPM_LOG_BUFFER - len, "%lld", proc.duration.tv_sec * 1000000UL + proc.duration.tv_usec);
+ 						}
+ 
+ 					} else {
+-- 
+2.17.1
+

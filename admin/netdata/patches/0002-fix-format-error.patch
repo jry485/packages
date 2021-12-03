@@ -1,0 +1,39 @@
+From 54fdcae55c608cc16019cc4d12ffb8742a55e686 Mon Sep 17 00:00:00 2001
+From: W_Y_CPP <383152993@qq.com>
+Date: Thu, 2 Dec 2021 21:03:00 -0800
+Subject: [PATCH] fix format error
+
+---
+ collectors/proc.plugin/sys_class_infiniband.c | 2 +-
+ health/health.c                               | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/collectors/proc.plugin/sys_class_infiniband.c b/collectors/proc.plugin/sys_class_infiniband.c
+index 46f40f2c..232e8406 100644
+--- a/collectors/proc.plugin/sys_class_infiniband.c
++++ b/collectors/proc.plugin/sys_class_infiniband.c
+@@ -481,7 +481,7 @@ int do_sys_class_infiniband(int update_every, usec_t dt)
+ 
+                 if (!p->discovered)
+                     info(
+-                        "Infiniband card %s port %s at speed %lu width %lu", dev_dent->d_name, port_dent->d_name,
++                        "Infiniband card %s port %s at speed %llu width %llu", dev_dent->d_name, port_dent->d_name,
+                         p->speed, p->width);
+ 
+                 p->discovered = 1;
+diff --git a/health/health.c b/health/health.c
+index 0793100a..d3312eb0 100644
+--- a/health/health.c
++++ b/health/health.c
+@@ -101,7 +101,7 @@ static void health_silencers_init(void) {
+                 freez(str);
+             }
+         } else {
+-            error("Health silencers file %s has the size %ld that is out of range[ 1 , %d ]. Aborting read.", silencers_filename, length, HEALTH_SILENCERS_MAX_FILE_LEN);
++            error("Health silencers file %s has the size %lld that is out of range[ 1 , %d ]. Aborting read.", silencers_filename, length, HEALTH_SILENCERS_MAX_FILE_LEN);
+         }
+         fclose(fd);
+     } else {
+-- 
+2.17.1
+

@@ -42,6 +42,9 @@ nginx_init() {
 
 
 start_service() {
+
+	$(/etc/init.d/uhttpd running) && return 0
+
 	nginx_init
 
 	procd_open_instance
@@ -56,6 +59,9 @@ start_service() {
 
 
 reload_service() {
+	
+	$(/etc/init.d/uhttpd running) && return 0
+	
 	nginx_init
 
 	if [ "$(cat "/proc/$(cat "/var/run/nginx.pid")/cmdline")" = \

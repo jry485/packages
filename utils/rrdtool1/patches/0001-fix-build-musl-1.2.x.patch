@@ -1,17 +1,17 @@
-From 342e8b67af19a78ceddcaf6f3c33ae52701e6c37 Mon Sep 17 00:00:00 2001
+From bfa777137ac1a41175f2b2c0487392ddcf4e47e2 Mon Sep 17 00:00:00 2001
 From: W_Y_CPP <383152993@qq.com>
-Date: Sat, 4 Dec 2021 14:04:44 +0900
+Date: Sat, 4 Dec 2021 18:14:24 +0900
 Subject: [PATCH] fix build musl 1.2.x
 
 ---
  contrib/trytime/trytime.c |  8 ++++----
  src/rrd_dump.c            |  2 +-
  src/rrd_graph.c           |  2 +-
- src/rrd_tool.c            | 14 +++++++-------
- 4 files changed, 13 insertions(+), 13 deletions(-)
+ src/rrd_tool.c            | 16 ++++++++--------
+ 4 files changed, 14 insertions(+), 14 deletions(-)
 
 diff --git a/contrib/trytime/trytime.c b/contrib/trytime/trytime.c
-index 71669e7..4bbc1af 100644
+index 71669e7b..4bbc1af0 100644
 --- a/contrib/trytime/trytime.c
 +++ b/contrib/trytime/trytime.c
 @@ -83,21 +83,21 @@ int main ( int ac, char **av )
@@ -41,7 +41,7 @@ index 71669e7..4bbc1af 100644
    exit(0);
  }
 diff --git a/src/rrd_dump.c b/src/rrd_dump.c
-index 945d11f..05d5aa7 100644
+index 945d11f4..05d5aa76 100644
 --- a/src/rrd_dump.c
 +++ b/src/rrd_dump.c
 @@ -39,7 +39,7 @@ rrd_dump(int argc, char **argv)
@@ -54,7 +54,7 @@ index 945d11f..05d5aa7 100644
      for(i=0;i<rrd.stat_head->ds_cnt;i++){
  	printf("\t<ds>\n");
 diff --git a/src/rrd_graph.c b/src/rrd_graph.c
-index 07bc68d..196546a 100644
+index 07bc68d4..196546a3 100644
 --- a/src/rrd_graph.c
 +++ b/src/rrd_graph.c
 @@ -3293,7 +3293,7 @@ im.unit = 0; /* do not display unit if not set */
@@ -67,7 +67,7 @@ index 07bc68d..196546a 100644
  		&col_red,
  		&col_green,
 diff --git a/src/rrd_tool.c b/src/rrd_tool.c
-index 9f2e375..d18e89e 100644
+index 9f2e375a..6fe147bc 100644
 --- a/src/rrd_tool.c
 +++ b/src/rrd_tool.c
 @@ -340,9 +340,9 @@ int HandleInputLine(int argc, char **argv, FILE* out)
@@ -99,6 +99,15 @@ index 9f2e375..d18e89e 100644
  	  printf("    <%s>\n", LEGEND_TAG);
  	  for (j = 0; j < col_cnt; j++) {
  	    char *entry = NULL;
+@@ -398,7 +398,7 @@ int HandleInputLine(int argc, char **argv, FILE* out)
+ 	  printf("  <%s>\n", DATA_TAG);
+ 	  for (i = start; i <= end; i += step) {
+ 	    printf ("    <%s>", DATA_ROW_TAG);
+-	    printf ("<%s>%lu</%s>", COL_TIME_TAG, i, COL_TIME_TAG);
++	    printf ("<%s>%llu</%s>", COL_TIME_TAG, i, COL_TIME_TAG);
+ 	    for (j = 0; j < col_cnt; j++) {
+ 	      rrd_value_t newval = DNAN;
+ 	      newval = *(ptr++);
 -- 
 2.17.1
 

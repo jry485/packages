@@ -9,10 +9,7 @@ G_OPTS="daemon off;"
 
 NGINX_UTIL="/usr/bin/nginx-util"
 
-eval $("${NGINX_UTIL}" get_env)
-
 CONF=""
-
 
 nginx_init() {
 	[ -z "${CONF}" ] || return # already called.
@@ -21,6 +18,7 @@ nginx_init() {
 	[ -d /var/lib/nginx ] || mkdir -p /var/lib/nginx
 
 	rm -f "$(readlink "${UCI_CONF}")"
+
 	${NGINX_UTIL} init_lan
 
 	if [ -e "${UCI_CONF}" ]
@@ -43,6 +41,8 @@ nginx_init() {
 
 start_service() {
 
+	eval $("${NGINX_UTIL}" get_env)
+
 	$(/etc/init.d/uhttpd running) && return 0
 
 	nginx_init
@@ -59,7 +59,9 @@ start_service() {
 
 
 reload_service() {
-	
+
+	eval $("${NGINX_UTIL}" get_env)	
+
 	$(/etc/init.d/uhttpd running) && return 0
 	
 	nginx_init

@@ -1,24 +1,38 @@
-From 49c4f6e5db1fdab35c4ebfacd84450da327d911c Mon Sep 17 00:00:00 2001
+From 7f98c5f01aec6ee06dcd212b0afc9c809089ee97 Mon Sep 17 00:00:00 2001
 From: W_Y_CPP <383152993@qq.com>
-Date: Wed, 1 Dec 2021 20:11:07 -0800
-Subject: [PATCH] fix netdata for musl 1.2.x
+Date: Sat, 4 Dec 2021 17:44:00 +0900
+Subject: [PATCH] fix netdata  build with musl 1.2.x
 
 ---
- daemon/unit_test.c                         |  4 ++--
- database/rrdset.c                          |  2 +-
- health/health.c                            |  4 ++--
- health/health_log.c                        |  2 +-
- libnetdata/log/log.c                       | 16 ++++++++--------
- streaming/receiver.c                       |  8 ++++----
- streaming/rrdpush.c                        |  6 +++---
- streaming/sender.c                         |  2 +-
- web/api/exporters/shell/allmetrics_shell.c |  2 +-
- web/api/formatters/rrdset2json.c           |  6 +++---
- web/api/web_api_v1.c                       |  2 +-
- 11 files changed, 27 insertions(+), 27 deletions(-)
+ collectors/proc.plugin/sys_class_infiniband.c |  2 +-
+ daemon/unit_test.c                            |  4 ++--
+ database/rrdset.c                             |  2 +-
+ health/health.c                               |  6 +++---
+ health/health_log.c                           |  2 +-
+ libnetdata/log/log.c                          | 16 ++++++++--------
+ streaming/receiver.c                          |  8 ++++----
+ streaming/rrdpush.c                           |  6 +++---
+ streaming/sender.c                            |  2 +-
+ web/api/exporters/shell/allmetrics_shell.c    |  2 +-
+ web/api/formatters/rrdset2json.c              |  6 +++---
+ web/api/web_api_v1.c                          |  2 +-
+ 12 files changed, 29 insertions(+), 29 deletions(-)
 
+diff --git a/collectors/proc.plugin/sys_class_infiniband.c b/collectors/proc.plugin/sys_class_infiniband.c
+index 69e27f8..1f658a9 100644
+--- a/collectors/proc.plugin/sys_class_infiniband.c
++++ b/collectors/proc.plugin/sys_class_infiniband.c
+@@ -481,7 +481,7 @@ int do_sys_class_infiniband(int update_every, usec_t dt)
+ 
+                 if (!p->discovered)
+                     info(
+-                        "Infiniband card %s port %s at speed %lu width %lu", dev_dent->d_name, port_dent->d_name,
++                        "Infiniband card %s port %s at speed %llu width %llu", dev_dent->d_name, port_dent->d_name,
+                         p->speed, p->width);
+ 
+                 p->discovered = 1;
 diff --git a/daemon/unit_test.c b/daemon/unit_test.c
-index 9a17aa7..12db86e 100644
+index 8109073..bfa2285 100644
 --- a/daemon/unit_test.c
 +++ b/daemon/unit_test.c
 @@ -1194,7 +1194,7 @@ int run_test(struct test *test)
@@ -40,10 +54,10 @@ index 9a17aa7..12db86e 100644
                  (rrdset_first_entry_t(st) + c * st->update_every) - time_start,
                  n, v, (same)?"OK":"### E R R O R ###");
 diff --git a/database/rrdset.c b/database/rrdset.c
-index 15640d3..eb89df0 100644
+index fd6605d..c0aac9e 100644
 --- a/database/rrdset.c
 +++ b/database/rrdset.c
-@@ -1430,7 +1430,7 @@ void rrdset_done(RRDSET *st) {
+@@ -1441,7 +1441,7 @@ void rrdset_done(RRDSET *st) {
      // check if we will re-write the entire data set
      if(unlikely(dt_usec(&st->last_collected_time, &st->last_updated) > st->entries * update_every_ut &&
                  st->rrd_memory_mode != RRD_MEMORY_MODE_DBENGINE)) {
@@ -53,11 +67,20 @@ index 15640d3..eb89df0 100644
          rrdset_init_last_updated_time(st);
  
 diff --git a/health/health.c b/health/health.c
-index 0793100..ee50eee 100644
+index 85d2a24..52b06e0 100644
 --- a/health/health.c
 +++ b/health/health.c
+@@ -101,7 +101,7 @@ static void health_silencers_init(void) {
+                 freez(str);
+             }
+         } else {
+-            error("Health silencers file %s has the size %ld that is out of range[ 1 , %d ]. Aborting read.", silencers_filename, length, HEALTH_SILENCERS_MAX_FILE_LEN);
++            error("Health silencers file %s has the size %lld that is out of range[ 1 , %d ]. Aborting read.", silencers_filename, length, HEALTH_SILENCERS_MAX_FILE_LEN);
+         }
+         fclose(fd);
+     } else {
 @@ -652,7 +652,7 @@ void *health_main(void *ptr) {
-         if (unlikely(check_if_resumed_from_suspention())) {
+         if (unlikely(check_if_resumed_from_suspension())) {
              apply_hibernation_delay = 1;
  
 -            info("Postponing alarm checks for %ld seconds, because it seems that the system was just resumed from suspension.",
@@ -75,7 +98,7 @@ index 0793100..ee50eee 100644
  
                  host->health_delay_up_to = now + hibernation_delay;
 diff --git a/health/health_log.c b/health/health_log.c
-index 3205f59..6e8a663 100644
+index de0a088..3fa8863 100644
 --- a/health/health_log.c
 +++ b/health/health_log.c
 @@ -110,7 +110,7 @@ inline void health_alarm_log_save(RRDHOST *host, ALARM_ENTRY *ae) {
@@ -84,9 +107,9 @@ index 3205f59..6e8a663 100644
                          "\t" CALCULATED_NUMBER_FORMAT_AUTO "\t" CALCULATED_NUMBER_FORMAT_AUTO
 -                        "\t%016lx"
 +                        "\t%016llx"
+                         "\t%s\t%s\t%s"
                          "\n"
                              , (ae->flags & HEALTH_ENTRY_FLAG_SAVED)?'U':'A'
-                             , host->hostname
 diff --git a/libnetdata/log/log.c b/libnetdata/log/log.c
 index 95d3d98..a039e6a 100644
 --- a/libnetdata/log/log.c
@@ -142,7 +165,7 @@ index 95d3d98..a039e6a 100644
  
          prevented++;
 diff --git a/streaming/receiver.c b/streaming/receiver.c
-index 0395406..f44f35f 100644
+index 11191f3..5f71b72 100644
 --- a/streaming/receiver.c
 +++ b/streaming/receiver.c
 @@ -68,15 +68,15 @@ PARSER_RC streaming_timestamp(char **words, void *user, PLUGINSD_ACTION *plugins
@@ -164,7 +187,7 @@ index 0395406..f44f35f 100644
          int ret;
  #ifdef ENABLE_HTTPS
          SSL *conn = host->stream_ssl.conn ;
-@@ -434,7 +434,7 @@ static int rrdpush_receive(struct receiver_state *rpt)
+@@ -437,7 +437,7 @@ static int rrdpush_receive(struct receiver_state *rpt)
      if(health_enabled != CONFIG_BOOLEAN_NO) {
          if(alarms_delay > 0) {
              rpt->host->health_delay_up_to = now_realtime_sec() + alarms_delay;
@@ -205,7 +228,7 @@ index f54fc60..f3a9533 100644
                  buffer_flush(w->response.data);
                  buffer_strcat(w->response.data, "This GUID is already streaming to this server");
 diff --git a/streaming/sender.c b/streaming/sender.c
-index d55a420..cb827ce 100644
+index 1dee1f0..91d2c83 100644
 --- a/streaming/sender.c
 +++ b/streaming/sender.c
 @@ -625,7 +625,7 @@ void *rrdpush_sender_thread(void *ptr) {
@@ -218,10 +241,10 @@ index d55a420..cb827ce 100644
              }
              rrdpush_claimed_id(s->host);
 diff --git a/web/api/exporters/shell/allmetrics_shell.c b/web/api/exporters/shell/allmetrics_shell.c
-index daa0049..3f48a8f 100644
+index 0b0ce22..6d02545 100644
 --- a/web/api/exporters/shell/allmetrics_shell.c
 +++ b/web/api/exporters/shell/allmetrics_shell.c
-@@ -111,7 +111,7 @@ void rrd_stats_api_v1_charts_allmetrics_json(RRDHOST *host, BUFFER *wb) {
+@@ -113,7 +113,7 @@ void rrd_stats_api_v1_charts_allmetrics_json(RRDHOST *host, BUFFER *wb) {
                                 "\t\t\"family\":\"%s\",\n"
                                 "\t\t\"context\":\"%s\",\n"
                                 "\t\t\"units\":\"%s\",\n"
@@ -257,7 +280,7 @@ index 5482881..ac761a7 100644
          );
  
 diff --git a/web/api/web_api_v1.c b/web/api/web_api_v1.c
-index 1d8217b..e16812e 100644
+index 96fcf48..d2d64ce 100644
 --- a/web/api/web_api_v1.c
 +++ b/web/api/web_api_v1.c
 @@ -589,7 +589,7 @@ inline int web_client_api_request_v1_data(RRDHOST *host, struct web_client *w, c

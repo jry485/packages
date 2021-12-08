@@ -185,9 +185,15 @@ service_triggers() {
 	done
 }
 
+get_config() {
+	config_get_bool enabled $1 enabled 1
+}
+
 start_service() {
 	init_config
-	
+	config_foreach get_config samba
+	[ $enabled != 1 ] && return 1
+
 	if [ ! -e /etc/samba/smb.conf ]; then
 		logger -p daemon.error -t 'samba4-server' "missing config /etc/samba/smb.conf!"
 		exit 1

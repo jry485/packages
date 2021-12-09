@@ -125,21 +125,12 @@ define Build/Compile
 		admin/halog/halog
 endef
 
-define Package/haproxy/postinst
-#!/bin/sh
-rm -rf /tmp/luci*
-echo stopping haproxy
-[ ! -f /etc/init.d/haproxy ] || /etc/init.d/haproxy stop
-[ ! -f /etc/init.d/haproxy ] || /etc/init.d/haproxy disable
-echo haproxy disabled
-endef
-
-
 define Package/haproxy/install
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/haproxy $(1)/usr/sbin/
 	$(INSTALL_DIR) $(1)/etc
 	$(INSTALL_CONF) ./files/haproxy.cfg $(1)/etc/
+	$(CP) ./files/etc/ $(1)
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/haproxy.init $(1)/etc/init.d/haproxy
 endef

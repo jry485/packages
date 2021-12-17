@@ -22,7 +22,6 @@ PKG_HASH:=e088c4b66e1be2ab6dc8a59b2376227befa195a112a483891916ec0f0580ed40
 
 PKG_INSTALL:=1
 PKG_BUILD_PARALLEL:=1
-PKG_FIXUP:=autoreconf
 PKG_USE_MIPS16:=0
 
 include $(INCLUDE_DIR)/package.mk
@@ -66,6 +65,7 @@ CONFIGURE_ARGS += \
 
 define Build/Configure
 	$(SED) 's/m4_esyscmd(\[git describe .*\])/$(PKG_VERSION)/' $(PKG_BUILD_DIR)/configure.ac
+	(cd $(PKG_BUILD_DIR); autoreconf --install --symlink)
 	$(Build/Configure/Default)
 endef
 

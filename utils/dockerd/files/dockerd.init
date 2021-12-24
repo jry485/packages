@@ -176,6 +176,7 @@ process_config() {
 	config_get data_root globals data_root "/opt/docker/"
 	config_get log_level globals log_level "warn"
 	config_get_bool iptables globals iptables "1"
+	config_get_bool auto_start globals auto_start 0
 
 	# Don't add these options by default
 	# omission == docker defaults
@@ -216,6 +217,7 @@ start_service() {
 	local nofile=$(cat /proc/sys/fs/nr_open)
 
 	process_config
+	[ $auto_start != 1 ] && return 1
 
 	procd_open_instance
 	procd_set_param stderr 1

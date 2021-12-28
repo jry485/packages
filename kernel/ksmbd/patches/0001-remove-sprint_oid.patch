@@ -1,0 +1,38 @@
+From 39cd262703daa528ba15577699c1d051562f1fe1 Mon Sep 17 00:00:00 2001
+From: W_Y_CPP <383152993@qq.com>
+Date: Tue, 28 Dec 2021 01:05:45 -0800
+Subject: [PATCH] remove sprint_oid
+
+---
+ asn1.c | 8 --------
+ 1 file changed, 8 deletions(-)
+
+diff --git a/asn1.c b/asn1.c
+index b014f46..3db6dce 100644
+--- a/asn1.c
++++ b/asn1.c
+@@ -265,12 +265,6 @@ int ksmbd_gssapi_this_mech(void *context, size_t hdrlen, unsigned char tag,
+ 		err = -EBADMSG;
+ 	kfree(oid);
+ out:
+-	if (err) {
+-		char buf[50];
+-
+-		sprint_oid(value, vlen, buf, sizeof(buf));
+-		ksmbd_debug(AUTH, "Unexpected OID: %s\n", buf);
+-	}
+ 	return err;
+ }
+ 
+@@ -307,8 +301,6 @@ int ksmbd_neg_token_init_mech_type(void *context, size_t hdrlen,
+ 
+ fail:
+ 	kfree(oid);
+-	sprint_oid(value, vlen, buf, sizeof(buf));
+-	ksmbd_debug(AUTH, "Unexpected OID: %s\n", buf);
+ 	return -EBADMSG;
+ }
+ 
+-- 
+2.17.1
+

@@ -12,6 +12,8 @@ STOP=89
 start_service() {
   config_load adguardhome
   config_get WORK_DIR config workdir
+  config_get_bool enabled config enabled 0
+  [ $enabled != 1 ] && return 1
 
   [ -d "$WORK_DIR" ] || mkdir -m 0755 -p "$WORK_DIR"
 

@@ -115,6 +115,8 @@ init_config()
 	mkdir -p /var/etc/ksmbd
 
 	config_load ksmbd
+
+	config_get_bool enabled $1 enabled 0
 	config_foreach smb_header globals
 	config_foreach smb_add_share share
 }
@@ -143,7 +145,7 @@ kill_server()
 start_service()
 {
 	init_config
-
+	[ $enabled != 1 ] && return 1
 	if [ ! -e /etc/ksmbd/smb.conf ]; then
 		logger -p daemon.error -t 'ksmbd' "missing config /etc/ksmbd/smb.conf!"
 		exit 1

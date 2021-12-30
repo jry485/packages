@@ -39,6 +39,7 @@ define KernelPackage/fs-ksmbd
 		+kmod-crypto-ccm \
 		+kmod-crypto-gcm \
 		+kmod-lib-crc32c \
+		+kmod-lib-oid-registry \
 		+kmod-asn1-decoder
 endef
 

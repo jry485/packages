@@ -29,7 +29,6 @@ define KernelPackage/fs-ksmbd
 		+kmod-crypto-md4 \
 		+kmod-crypto-md5 \
 		+kmod-crypto-hmac \
-		+kmod-crypto-arc4 \
 		+kmod-crypto-ecb \
 		+kmod-crypto-des \
 		+kmod-crypto-sha256 \
@@ -38,9 +37,8 @@ define KernelPackage/fs-ksmbd
 		+kmod-crypto-aead \
 		+kmod-crypto-ccm \
 		+kmod-crypto-gcm \
-		+kmod-lib-crc32c \
-		+kmod-lib-oid-registry \
-		+kmod-asn1-decoder
+		+kmod-fs-nfsd \
+		+kmod-nf-nathelper-extra
 endef
 
 define KernelPackage/fs-ksmbd/description

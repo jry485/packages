@@ -29,6 +29,7 @@ smb_header()
 	# we dont use netbios anymore as default and wsd/avahi is dns based
 	hostname="$(cat /proc/sys/kernel/hostname | tr -d '{};%?=#\n')"
 
+	config_get_bool enabled "$1" enabled 0
 	config_get_sane workgroup "$1" workgroup "WORKGROUP"
 	config_get_sane description "$1" description "Ksmbd on OpenWrt"
 	config_get_bool ALLOW_LEGACY_PROTOCOLS "$1" allow_legacy_protocols 0
@@ -116,7 +117,6 @@ init_config()
 
 	config_load ksmbd
 
-	config_get_bool enabled $1 enabled 0
 	config_foreach smb_header globals
 	config_foreach smb_add_share share
 }
@@ -159,7 +159,7 @@ start_service()
 		logger -p daemon.error -t 'ksmbd' "modprobe of ksmbd module failed, can\'t start ksmbd!"
 		exit 1
 	fi
-
+	[ $enabled != 1 ] && return 1
 	logger -p daemon.notice -t 'ksmbd' "Starting Ksmbd userspace service."
 	procd_open_instance
 	procd_add_mdns "smb" "tcp" "445" "daemon=ksmbd"

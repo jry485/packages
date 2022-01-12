@@ -1,7 +1,7 @@
-From e046a17e4a75cd8c665249ab9811f95a02dcf3dc Mon Sep 17 00:00:00 2001
+From d06c686b2bc1278423b2a31399f3bf88e4931126 Mon Sep 17 00:00:00 2001
 From: W_Y_CPP <383152993@qq.com>
-Date: Wed, 1 Dec 2021 21:18:38 -0800
-Subject: [PATCH] fix iputils for musl 1.2.x
+Date: Wed, 12 Jan 2022 00:03:21 -0500
+Subject: [PATCH] fix ipu
 
 ---
  clockdiff.c        | 2 +-
@@ -10,23 +10,23 @@ Subject: [PATCH] fix iputils for musl 1.2.x
  3 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/clockdiff.c b/clockdiff.c
-index 911c192..7b751bd 100644
+index 538bf78..0d149f9 100644
 --- a/clockdiff.c
 +++ b/clockdiff.c
-@@ -619,7 +619,7 @@ int main(int argc, char **argv)
+@@ -620,7 +620,7 @@ int main(int argc, char **argv)
  				ctl.hisname, ctl.rtt, ctl.rtt_sigma, ctl.min_rtt,
  				ctl.measure_delta, ctl.measure_delta1, s);
- 		} else
+ 		} else {
 -			printf("%ld %d %d\n", now, ctl.measure_delta, ctl.measure_delta1);
 +			printf("%lld %d %d\n", now, ctl.measure_delta, ctl.measure_delta1);
+ 		}
  	}
  	exit(0);
- }
 diff --git a/ping/ping_common.c b/ping/ping_common.c
-index 33e6003..d49a2ce 100644
+index ba46252..293fa52 100644
 --- a/ping/ping_common.c
 +++ b/ping/ping_common.c
-@@ -891,7 +891,7 @@ int finish(struct ping_rts *rts)
+@@ -883,7 +883,7 @@ int finish(struct ping_rts *rts)
  #endif
  		printf(_(", %g%% packet loss"),
  		       (float)((((long long)(rts->ntransmitted - rts->nreceived)) * 100.0) / rts->ntransmitted));

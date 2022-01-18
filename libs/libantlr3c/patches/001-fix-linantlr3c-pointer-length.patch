@@ -1,0 +1,27 @@
+From 11ff901ff35f24a2186bd3c0fc82e7998bcf4f8b Mon Sep 17 00:00:00 2001
+From: W_Y_CPP <383152993@qq.com>
+Date: Mon, 17 Jan 2022 21:23:47 -0500
+Subject: [PATCH] fix antlr3c
+
+---
+ include/antlr3defs.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/include/antlr3defs.h b/include/antlr3defs.h
+index 2435b02..ab13965 100644
+--- a/include/antlr3defs.h
++++ b/include/antlr3defs.h
+@@ -210,8 +210,8 @@ typedef ANTLR3_UINT64		ANTLR3_INTKEY;
+ #define	ANTLR3_FUNC_PTR(ptr)	(void *)((ANTLR3_UINT32)(ptr))
+ #define ANTLR3_UINT64_CAST(ptr) (ANTLR3_UINT64)((ANTLR3_UINT32)(ptr))
+ #define	ANTLR3_UINT32_CAST(ptr)	(ANTLR3_UINT32)(ptr)
+-typedef	ANTLR3_INT32		ANTLR3_MARKER;
+-typedef ANTLR3_UINT32		ANTLR3_INTKEY;
++typedef	ANTLR3_INT64		ANTLR3_MARKER;
++typedef ANTLR3_UINT64		ANTLR3_INTKEY;
+ #endif
+ 
+ #ifdef	ANTLR3_WIN32
+-- 
+2.17.1
+

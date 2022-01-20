@@ -39,7 +39,8 @@ TARGET_CFLAGS += $(FPIC)
 
 CONFIGURE_ARGS += \
 	--enable-shared \
-	--enable-static
+	--enable-static \
+	--enable-64bit
 
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/include

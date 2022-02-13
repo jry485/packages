@@ -41,6 +41,9 @@ define KernelPackage/fs-ksmbd
 		+kmod-nf-nathelper-extra
 endef
 
+# The last two DEPENDS are hacks in order to get CONFIG_ASN1 and CONFIG_OID_REGISTRY
+# which it seems can't be selected independently. Some bug in either base or upstream.
+
 define KernelPackage/fs-ksmbd/description
   Ksmbd is an In-kernel SMBv(1)2/3 fileserver.
   It's an implementation of the SMB protocol in kernel space for sharing files and IPC services over network.

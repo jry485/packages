@@ -50,7 +50,7 @@ endef
 
 define Package/verysync/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/verysync $(1)/usr/bin/verysync
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/verysync $(1)/usr/bin/very_sync
 endef
 
 $(eval $(call BuildPackage,verysync))

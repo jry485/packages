@@ -46,6 +46,7 @@ ssh_instance()
 
 	if [ "$PasswordAuth" -eq 0 ]; then
 		sed -i '/PasswordAuthentication/d' /etc/ssh/sshd_config
+		sed -i '$aPasswordAuthentication no' /etc/ssh/sshd_config
 	else
 		sed -i '/PasswordAuthentication/d' /etc/ssh/sshd_config
 		sed -i '$aPasswordAuthentication yes' /etc/ssh/sshd_config

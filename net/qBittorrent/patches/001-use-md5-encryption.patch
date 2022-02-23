@@ -1,0 +1,123 @@
+From 85214ea77cf997afba87abe3ef8edc48cf2bc581 Mon Sep 17 00:00:00 2001
+From: W_Y_CPP <383152993@qq.com>
+Date: Wed, 23 Feb 2022 04:48:01 -0500
+Subject: [PATCH] use md5 encryption
+
+---
+ src/base/preferences.cpp         |  4 ++--
+ src/base/utils/password.cpp      | 14 ++++++++++++++
+ src/base/utils/password.h        |  7 +++++++
+ src/gui/mainwindow.cpp           |  2 +-
+ src/webui/api/appcontroller.cpp  |  2 +-
+ src/webui/api/authcontroller.cpp |  2 +-
+ 6 files changed, 26 insertions(+), 5 deletions(-)
+
+diff --git a/src/base/preferences.cpp b/src/base/preferences.cpp
+index ded4e7f..6c22027 100644
+--- a/src/base/preferences.cpp
++++ b/src/base/preferences.cpp
+@@ -57,6 +57,7 @@
+ #include "profile.h"
+ #include "settingsstorage.h"
+ #include "utils/fs.h"
++#include "utils/password.h"
+ 
+ namespace
+ {
+@@ -648,8 +649,7 @@ void Preferences::setWebUiUsername(const QString &username)
+ QByteArray Preferences::getWebUIPassword() const
+ {
+     // default: adminadmin
+-    const QByteArray defaultValue = "ARQ77eY1NUZaQsuDHbIMCA==:0WMRkYTUWVT9wVvdDtHAjU9b3b7uB8NR1Gur2hmQCvCDpm39Q+PsJRJPaCU51dEiz+dTzh8qbPsL8WkFljQYFQ==";
+-    return value("Preferences/WebUI/Password_PBKDF2", defaultValue);
++    return value("Preferences/WebUI/Password_PBKDF2", Utils::Password::MD5::generate("adminadmin"));
+ }
+ 
+ void Preferences::setWebUIPassword(const QByteArray &password)
+diff --git a/src/base/utils/password.cpp b/src/base/utils/password.cpp
+index 0351aff..6394052 100644
+--- a/src/base/utils/password.cpp
++++ b/src/base/utils/password.cpp
+@@ -35,6 +35,7 @@
+ #include <QByteArray>
+ #include <QString>
+ #include <QVector>
++#include <QCryptographicHash>
+ 
+ #include "bytearray.h"
+ #include "random.h"
+@@ -118,3 +119,16 @@ bool Utils::Password::PBKDF2::verify(const QByteArray &secret, const QByteArray
+         reinterpret_cast<const char *>(outBuf.data()), static_cast<int>(outBuf.size()));
+     return slowEquals(key, outBufView);
+ }
++
++
++QByteArray Utils::Password::MD5::generate(const QString &password)
++{
++   QCryptographicHash md5(QCryptographicHash::Md5);
++   md5.addData(password.toLocal8Bit());
++   return md5.result().toHex();
++}
++
++bool Utils::Password::MD5::verify(const QByteArray &secret, const QString &password)
++{
++    return secret==generate(password);
++}
+diff --git a/src/base/utils/password.h b/src/base/utils/password.h
+index 3ad6d85..dfbebd5 100644
+--- a/src/base/utils/password.h
++++ b/src/base/utils/password.h
+@@ -45,4 +45,11 @@ namespace Utils::Password
+         bool verify(const QByteArray &secret, const QString &password);
+         bool verify(const QByteArray &secret, const QByteArray &password);
+     }
++
++    namespace MD5
++    {
++        QByteArray generate(const QString &password);
++
++        bool verify(const QByteArray &secret, const QString &password);
++    }
+ }
+diff --git a/src/gui/mainwindow.cpp b/src/gui/mainwindow.cpp
+index 0d7b7eb..9dfa055 100644
+--- a/src/gui/mainwindow.cpp
++++ b/src/gui/mainwindow.cpp
+@@ -1047,7 +1047,7 @@ bool MainWindow::unlockUI()
+     Preferences *const pref = Preferences::instance();
+ 
+     const QByteArray secret = pref->getUILockPassword();
+-    if (!Utils::Password::PBKDF2::verify(secret, password))
++    if (!Utils::Password::MD5::verify(secret, password))
+     {
+         QMessageBox::warning(this, tr("Invalid password"), tr("The password is invalid"));
+         return false;
+diff --git a/src/webui/api/appcontroller.cpp b/src/webui/api/appcontroller.cpp
+index 7bed599..6e91383 100644
+--- a/src/webui/api/appcontroller.cpp
++++ b/src/webui/api/appcontroller.cpp
+@@ -654,7 +654,7 @@ void AppController::setPreferencesAction()
+     if (hasKey("web_ui_username"))
+         pref->setWebUiUsername(it.value().toString());
+     if (hasKey("web_ui_password"))
+-        pref->setWebUIPassword(Utils::Password::PBKDF2::generate(it.value().toByteArray()));
++        pref->setWebUIPassword(Utils::Password::MD5::generate(it.value().toByteArray()));
+     if (hasKey("bypass_local_auth"))
+         pref->setWebUiLocalAuthEnabled(!it.value().toBool());
+     if (hasKey("bypass_auth_subnet_whitelist_enabled"))
+diff --git a/src/webui/api/authcontroller.cpp b/src/webui/api/authcontroller.cpp
+index 5dd63f8..501e8b8 100644
+--- a/src/webui/api/authcontroller.cpp
++++ b/src/webui/api/authcontroller.cpp
+@@ -62,7 +62,7 @@ void AuthController::loginAction()
+     const QString username {pref->getWebUiUsername()};
+     const QByteArray secret {pref->getWebUIPassword()};
+     const bool usernameEqual = Utils::Password::slowEquals(usernameFromWeb.toUtf8(), username.toUtf8());
+-    const bool passwordEqual = Utils::Password::PBKDF2::verify(secret, passwordFromWeb);
++    const bool passwordEqual = Utils::Password::MD5::verify(secret, passwordFromWeb);
+ 
+     if (usernameEqual && passwordEqual)
+     {
+-- 
+2.17.1
+

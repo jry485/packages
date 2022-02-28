@@ -162,7 +162,7 @@ define Package/iptgeoip/install
 		$(1)/usr/lib/xtables-addons/
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(CP) \
-		$(PKG_INSTALL_DIR)/usr/bin/xt_geoip_fetch \
+		$(PKG_INSTALL_DIR)/usr/bin/xt_geoip_query \
 		$(1)/usr/bin/
 	$(INSTALL_DIR) $(1)/usr/share/xt_geoip
 	touch $(1)/usr/share/xt_geoip/.keep

@@ -160,7 +160,7 @@ define Package/ntfs-3g/install
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libntfs-3g.so.* $(1)/usr/lib/
 	$(INSTALL_DIR) $(1)/sbin
-	$(LN) ../usr/bin/ntfs-3g $(1)/sbin/mount.ntfs-3g
+	$(LN) ../usr/bin/ntfs-3g $(1)/sbin/mount.ntfs
 endef
 
 define Package/ntfs-3g/postinst

@@ -44,7 +44,7 @@ PKG_CONFIG_DEPENDS:= \
 	CONFIG_PYTHON3_BLUETOOTH_SUPPORT
 
 PKG_BUILD_DEPENDS:=python3/host
-HOST_BUILD_DEPENDS:=bzip2/host expat/host libffi/host
+HOST_BUILD_DEPENDS:=bzip2/host libffi/host
 
 include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk

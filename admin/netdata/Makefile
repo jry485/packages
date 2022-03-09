@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=netdata
-PKG_VERSION:=1.31.0
-PKG_RELEASE:=1
+PKG_VERSION:=1.33.1
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_MAINTAINER:=Josef Schlehofer <pepe.schlehofer@gmail.com>, Daniel Engberg <daniel.engberg.lists@pyret.net>
 PKG_LICENSE:=GPL-3.0-or-later
@@ -18,7 +18,7 @@ PKG_CPE_ID:=cpe:/a:my-netdata:netdata
 
 PKG_SOURCE:=$(PKG_NAME)-v$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/netdata/netdata/tar.gz/v$(PKG_VERSION)?
-PKG_HASH:=e088c4b66e1be2ab6dc8a59b2376227befa195a112a483891916ec0f0580ed40
+PKG_HASH:=fae8ba3d88c555fd7fb3ddf91c34e827163823f269d8469e02627df50f4ba76d
 
 PKG_INSTALL:=1
 PKG_BUILD_PARALLEL:=1
@@ -29,7 +29,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/netdata
   SECTION:=admin
   CATEGORY:=Administration
-  DEPENDS:=+zlib +libuuid +libuv +libmnl +libjson-c +libopenssl
+  DEPENDS:=+zlib +libuuid +libuv +libmnl +libjson-c +libopenssl +liblz4
   TITLE:=Real-time performance monitoring tool
   URL:=https://www.netdata.cloud/
 endef

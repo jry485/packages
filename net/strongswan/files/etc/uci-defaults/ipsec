@@ -1,0 +1,7 @@
+#!/bin/sh
+
+rm -f /tmp/luci-*
+[ ! -f /etc/init.d/ipsec ] || /etc/init.d/ipsec stop
+[ ! -f /etc/init.d/ipsec ] || /etc/init.d/ipsec disable
+
+exit 0

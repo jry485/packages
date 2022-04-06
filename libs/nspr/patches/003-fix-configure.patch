@@ -19,15 +19,4 @@
  
  # These three variables are undocumented and unsupported,
 
---- a/nspr/configure.in 2020-02-01 04:37:50.000000000 +0800
-+++ a/nspr/configure.in 2020-12-28 11:47:09.982986594 +0800
-@@ -8,7 +8,7 @@
- AC_INIT
- AC_CONFIG_SRCDIR([pr/include/nspr.h])
-
--AC_CONFIG_AUX_DIR(${srcdir}/build/autoconf)
-+AC_CONFIG_AUX_DIR(build/autoconf)
- AC_CANONICAL_TARGET
-
- dnl ========================================================
 
